@@ -6,7 +6,7 @@
 /*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:07:11 by mochajou          #+#    #+#             */
-/*   Updated: 2025/05/01 18:35:07 by mochajou         ###   ########.fr       */
+/*   Updated: 2025/05/02 23:47:58 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ static char	*get_value2(t_env *env, char *s, char *key)
 	return (ft_strdup(""));
 }
 
-static char	*get_value(t_env *env, char *s)
+char	*get_value(t_env *env, char *s)
 {
 	int			i;
 	int			j;
 	char		*tmp;
 	char		*value;
-	static char	*del = "\'\\/$";
+	static char	*del = "\'\"/$"; // kan haka => static char	*del = "\'\\/$";
 
 	i = -1;
 	while (s[++i])

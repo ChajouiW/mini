@@ -6,7 +6,7 @@
 /*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 09:00:35 by abahja            #+#    #+#             */
-/*   Updated: 2025/05/02 19:07:21 by mochajou         ###   ########.fr       */
+/*   Updated: 2025/05/02 23:27:49 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,4 +116,6 @@ void	redir_recognizer(t_minishell *bash);
 void	expandator(t_minishell *bash, int f);
 int		is_in_token_list(e_type type, e_type *list);
 void    ft_spacer(t_minishell *bash);
+char	*get_value(t_env *env, char *s);
+
 #endif

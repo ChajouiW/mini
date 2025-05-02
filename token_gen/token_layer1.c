@@ -6,7 +6,7 @@
 /*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:36:23 by abahja            #+#    #+#             */
-/*   Updated: 2025/05/02 22:03:27 by mochajou         ###   ########.fr       */
+/*   Updated: 2025/05/03 00:09:36 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,29 +211,29 @@ void world_count(t_minishell *bash, int i, int j)
 	if (!syntax(bash))
 		return ;
 	redir_recognizer(bash);
-	// printf("%p\n", bash->flow->redirs);
 	here_doc(bash);
-	t_eflow *flow = bash->flow;
-	while(flow)
-	{
-		while(flow->redirs)
-		{
-			printf("del = %s\nfile = %s\nq_del = %d\ntype = %s\n", flow->redirs->del, flow->redirs->filename, flow->redirs->q_del, token_type_to_str(flow->redirs->type));
-			flow->redirs = flow->redirs->next;
-		}
-		flow = flow->next;
-	}
+// 	t_eflow *flow = bash->flow;
+// 	printf("--------------\n\n\n");
+// 	while(flow)
+// 	{
+// 		while(flow->redirs)
+// 		{
+// 			printf("file = %s\tq_del = %d\ttype = %s\n", flow->redirs->filename, flow->redirs->q_del, token_type_to_str(flow->redirs->type));
+// 			flow->redirs = flow->redirs->next;
+// 		}
+// 		printf("\n\n----------next---------\n\n");
+// 		flow = flow->next;
+// 	}
 }
 char	*ft_itoa1(unsigned int n)
 {
 	unsigned int x;
 	char	path[9];
 	char	*file;
-	int	i = 0;
+	int	i;
+	
 	x = n;
 	strcpy(path, "/tmp/tmp");
-	if (!n)
-		i++;
 	while(x)
 	{
 		i++;
@@ -250,35 +250,44 @@ char	*ft_itoa1(unsigned int n)
 	ft_malloc(0, 'r', s);
 	return (file);
 }
-char	*here_content(char *del)
+void	go_go(char *del, char *file, char q, t_env *env)
 {
-	int	id;
 	int	fd;
-	char	*file;
 	char	*content;
-	static unsigned int	file_counter;
-	int	status;
+	
+	content = file;
+	if (access(file, W_OK) == -1)
+		unlink(file);
+	fd = open(file, O_CREAT | O_RDWR);
+	printf("fd = %d\n", fd);
+	int len = ft_strlen(del);
+	printf("%s\tlen = %d\n", del, len);
+	while(content && ft_strcmp(content, del))
+	{
+		content = readline("> ");
+		if (ft_strcmp(content, del))
+		{
+			if (!q && ft_strchr(content, '$'))
+				content = get_value(env, content);
+			content = ft_strjoin(content, "\n");
+			write(fd, content, ft_strlen(content));
+		}
+	}
+	close(fd);
+	exit(0);
+}
+char	*here_content(char *del, char q, t_env *env)
+{
+	static unsigned int	counter;
+	char				*file;
+	int					status;
+	int					id;
 
-	file_counter++;
-	file = ft_itoa1(file_counter);
+	counter++;
+	file = ft_itoa1(counter);
 	id = fork();
 	if (id == 0)
-	{
-		content = file;
-		if (access(file, W_OK) == -1)
-			unlink(file);
-		fd = open(file, O_CREAT | O_RDWR);
-		printf("fd = %d\n", fd);
-		int len = ft_strlen(del);
-		while(content && !ft_strnstr(del, content, len))
-		{
-			content = readline("> ");
-			if (!ft_strnstr(del, content, len))
-				write(fd, content, ft_strlen(content));
-		}
-		close(fd);
-		exit(1);
-	}
+		go_go(del, file, q, env);
 	waitpid(id, &status, 0);
 	return (file);
 }
@@ -289,15 +298,13 @@ void	here_doc(t_minishell *bash)
 
 	while(flow)
 	{
-		if (re)
+		printf("--------------flow----------------\n");
 		re = flow->redirs;
-		if (!re)
-			printf("hh\n");
 		while(re)
 		{
 			if (re->type == HEREDOC)
 			{
-				re->filename = here_content(re->del);
+				re->filename = here_content(re->del, re->q_del, bash->env);
 				re->type = RED_IN;
 			}
 			re = re->next;
