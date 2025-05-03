@@ -6,7 +6,7 @@
 /*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:36:23 by abahja            #+#    #+#             */
-/*   Updated: 2025/05/03 00:09:36 by mochajou         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:13:30 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,10 +228,12 @@ void world_count(t_minishell *bash, int i, int j)
 char	*ft_itoa1(unsigned int n)
 {
 	unsigned int x;
-	char	path[9];
-	char	*file;
-	int	i;
-	
+	char		path[9];
+	char		*file;
+	char		*s;
+	int			i;
+
+	i = 0;
 	x = n;
 	strcpy(path, "/tmp/tmp");
 	while(x)
@@ -239,7 +241,7 @@ char	*ft_itoa1(unsigned int n)
 		i++;
 		x /= 10;
 	}
-	char	*s = (char *)ft_malloc(sizeof(char) * (i + 1), 'x', 0);
+	s = (char *)ft_malloc(sizeof(char) * (i + 1), 'x', 0);
 	s[i--] = '\0';
 	while(n)
 	{
@@ -252,15 +254,16 @@ char	*ft_itoa1(unsigned int n)
 }
 void	go_go(char *del, char *file, char q, t_env *env)
 {
-	int	fd;
+	int		fd;
+	int 	len;
 	char	*content;
-	
+
 	content = file;
-	if (access(file, W_OK) == -1)
+	if (access(file, F_OK) == 0)
 		unlink(file);
-	fd = open(file, O_CREAT | O_RDWR);
+	fd = open(file, O_CREAT | O_RDWR, 0644);
 	printf("fd = %d\n", fd);
-	int len = ft_strlen(del);
+	len = ft_strlen(del);
 	printf("%s\tlen = %d\n", del, len);
 	while(content && ft_strcmp(content, del))
 	{
@@ -291,6 +294,7 @@ char	*here_content(char *del, char q, t_env *env)
 	waitpid(id, &status, 0);
 	return (file);
 }
+
 void	here_doc(t_minishell *bash)
 {
 	t_eflow *flow = bash->flow;

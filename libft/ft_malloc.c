@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abahja <abahja@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:19 by abahja            #+#    #+#             */
-/*   Updated: 2025/04/26 16:56:53 by abahja           ###   ########.fr       */
+/*   Updated: 2025/05/03 16:10:10 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_remove(t_heapdata **heap, void *p)
 {
 	t_heapdata	*node = *heap;
 	t_heapdata	*tmp;
+
 	if (node->ptr_h == p)
 	{
 		*heap = (*heap)->next;

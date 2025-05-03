@@ -6,7 +6,7 @@
 /*   By: mochajou <mochajou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:07:11 by mochajou          #+#    #+#             */
-/*   Updated: 2025/05/02 23:47:58 by mochajou         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:09:34 by mochajou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*get_value(t_env *env, char *s)
 	int			j;
 	char		*tmp;
 	char		*value;
-	static char	*del = "\'\"/$"; // kan haka => static char	*del = "\'\\/$";
+	static char	*del = "\'\"\\/$";
 
 	i = -1;
 	while (s[++i])
@@ -63,31 +63,6 @@ char	*get_value(t_env *env, char *s)
 		}
 	}
 	return (ft_strdup(s));
-}
-
-char	*del_fixer(char *str)
-{
-	char	*del;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	del = ft_malloc(sizeof(char) * (ft_strlen(str) + 1), 'x', 0);
-	while (str[i])
-	{
-		if ((str[i] == '\"' || str[i] == '\'')
-			&& (i == 0 || str[i - 1] != '\\'))
-			i++;
-		else
-		{
-			del[j] = str[i];
-			i++;
-			j++;
-		}
-	}
-	del[j] = '\0';
-	return (del);
 }
 
 // static const char *token_type_to_str(e_type type)
